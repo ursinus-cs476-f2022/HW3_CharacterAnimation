@@ -93,12 +93,18 @@ class Particles {
         this.time += dt;
         this.lastTime = thisTime;
         let spheres = this.spheres;
+        const gravity = [0, -9.81, 0]; // Define a constant which will be the acceleration
         for (let i = 0; i < spheres.length; i++) {
             for (let k = 0; k < 3; k++) {
                 spheres[i].pos[k] += dt*spheres[i].velocity[k];
                 spheres[i].transform[12+k] = spheres[i].pos[k];
+                spheres[i].velocity[k] += dt*gravity[k]; // Update the velocity due to gravity
             }
-            // TODO: Add acceleration and collision effects
+            // If the bottom of the sphere is about to hit the ground
+            if (spheres[i].pos[1] - spheres[i].radius < 0) {
+                spheres[i].velocity[1] *= -0.9; // Flip the y velocity, but lose 10% of the speed
+                spheres[i].pos[1] = spheres[i].radius; // Put back up above the ground so it doesn't oscillate or get stuck
+            }
         }
     }
 }

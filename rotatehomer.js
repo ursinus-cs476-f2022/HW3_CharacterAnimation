@@ -1,16 +1,25 @@
 function animate() {
-    // Keep track of elapsed time
+    // Step 1: Keep track of elapsed time
     let time = (new Date()).getTime();
     let dt = (lastTime - time)/1000;
     lastTime = time;
-    angle += dt;
 
+    // Step 2: "Physics" / Motion / etc
+    angle += dt;
     const scene = canvas.scene;
     for (let i = 0; i < scene.children.length; i++) {
         if ("name" in scene.children[i] && scene.children[i].name == "homer") {
-            let c = scene.children[i];
+            let c = scene.children[i]; // Child that contains homer
+            c.transform = [
+                Math.cos(angle), 0, Math.sin(angle), 0,
+                0,              1,          0,       0,
+                -Math.sin(angle), 0, Math.cos(angle), 0,
+                                        -4, 2, 0, 1
+            ];
         }
     }
+
+    // Step 3: Rendering
     requestAnimFrame(canvas.repaint.bind(canvas));
     requestAnimFrame(animate);
 }
